@@ -81,12 +81,10 @@ const weatherSlice = createSlice({
         const city = action.payload;
         const existingCity = state.cities.find((c) => c.id === city.id);
         if (existingCity) {
-          // Якщо місто вже є, оновлюємо його дані
           state.cities = state.cities.map((c) =>
             c.id === city.id ? { ...c, ...city } : c,
           );
         } else {
-          // Якщо міста ще немає, додаємо нове
           state.cities.push(city);
         }
         saveToLocalStorage(state.cities);
