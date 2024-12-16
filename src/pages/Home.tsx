@@ -20,6 +20,7 @@ import CitySelect from '../components/CitySearch';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
+
   const { cities, loading } = useSelector((state: RootState) => state.weather);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -28,7 +29,7 @@ const HomePage: FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const handleAddCity = () => {
-    if (selectedCity && selectedCountry) {
+    if (selectedCity) {
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
       setSelectedCity(null);
       setSelectedCountry(null);
