@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { fetchWeather } from '../redux/weatherSlice';
@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 
-const HomePage: React.FC = () => {
+const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { cities, loading, error } = useSelector(
     (state: RootState) => state.weather,

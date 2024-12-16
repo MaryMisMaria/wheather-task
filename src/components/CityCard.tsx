@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 // hooks
 import { useAppDispatch } from '../hooks';
@@ -41,7 +41,7 @@ const getWeatherIcon = (description: string) => {
   return null;
 };
 
-const CityCard: React.FC<CityCardProps> = ({ id, name, temp, description }) => {
+const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const cardStyle = useCardColor(description);
