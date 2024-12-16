@@ -1,92 +1,109 @@
-import React, { FC, useState } from 'react';
-import {
-  Box,
-  CircularProgress,
-  FormControl,
-  MenuItem,
-  Select,
-} from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { SelectChangeEvent } from '@mui/material/Select';
+import React, { useCallback, useState } from 'react';
+import Select, { SingleValue } from 'react-select'; // Імпортуємо SingleValue
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-
-interface Option {
-  name: string;
-  id: string;
+interface CityOption {
+  label: string;
+  value: string;
+  country: string;
 }
 
-interface CustomSelectComponentProps {
-  rowData: string;
-  options: Option[];
-  disabled?: boolean;
-  setRowData: (value: string) => void;
-  onSelectChange?: (value: string) => void;
-  initialValueName?: string;
+interface CitySelectProps {
+  onCitySelect: (cityName: string, country: string) => void;
 }
 
-const CustomSelectComponent: FC<CustomSelectComponentProps> = ({
-  disabled,
-  setRowData,
-  onSelectChange,
-}) => {
-  const dispatch: AppDispatch = useDispatch();
-  const { cities, loading, error } = useSelector(
-    (state: RootState) => state.weather,
-  );
+const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
+  const [options, setOptions] = useState<CityOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
 
-  const [cityName, setCityName] = useState<string>('');
+  const fetchCities = useCallback(async (inputValue: string) => {
+    if (!inputValue) return;
 
-  const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    const selectedCity = event.target.value;
-    setCityName(selectedCity);
-    setRowData(selectedCity);
-    onSelectChange && onSelectChange(selectedCity);
+    const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+    const BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}?q=${inputValue}&limit=5&appid=${API_KEY}`,
+      );
+      const data = await response.json();
+
+      const cityOptions = data.map((city: any) => ({
+        label: `${city.name}, ${city.country}`,
+        value: city.name,
+        country: city.country,
+      }));
+      setOptions(cityOptions);
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleInputChange = (inputValue: string) => {
+    fetchCities(inputValue);
   };
 
-  const getSelectName = (name: string) => {
-    return name.charAt(0).toUpperCase() + name.slice(1); // Basic capitalization if no translation
+  const handleChange = (
+    newValue: SingleValue<{ label: string; value: string }>,
+  ) => {
+    if (newValue) {
+      // Перетворюємо на тип CityOption, додавши country
+      const selected = options.find(
+        (option) => option.value === newValue.value,
+      );
+      if (selected) {
+        setSelectedCity(selected);
+        onCitySelect(selected.value, selected.country);
+      }
+    } else {
+      setSelectedCity(null);
+      onCitySelect('', ''); // Очищуємо значення
+    }
+  };
+
+  const handleClear = () => {
+    setSelectedCity(null);
+    onCitySelect('', '');
   };
 
   return (
-    <Box width="95%" display="flex" alignSelf="center">
-      <FormControl fullWidth>
-        <Select
-          value={cityName}
-          onChange={handleSelectChange}
-          disabled={disabled}
-          displayEmpty
-          sx={{
-            fieldset: { border: 'none' },
-            maxHeight: { sm: '30px', xs: '20px' },
-            '.MuiOutlinedInput-input': {
-              textAlign: 'center',
-              textTransform: 'none',
-              color: 'text.primary',
-              backgroundColor: 'secondaryTableRow',
-            },
+    <div style={{ position: 'relative' }}>
+      <Select
+        id="city-select"
+        options={options}
+        onInputChange={handleInputChange}
+        onChange={handleChange} // Використовуємо оновлену функцію handleChange
+        placeholder="Search for a city..."
+        isLoading={isLoading}
+        value={
+          selectedCity
+            ? { label: selectedCity.label, value: selectedCity.value }
+            : null
+        }
+      />
+      {selectedCity && (
+        <IconButton
+          onClick={handleClear}
+          size="small"
+          style={{
+            fontSize: 8,
+            color: 'black',
+            position: 'absolute',
+            top: '4px',
+            right: '80px',
           }}
         >
-          <MenuItem value="" disabled>
-            Select City
-          </MenuItem>
-          {cities.map((option) => (
-            <MenuItem key={option.id} value={option.name} disabled={disabled}>
-              {getSelectName(option.name)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      {loading && (
-        <CircularProgress
-          size={20}
-          style={{ position: 'absolute', top: '20px', right: '20px' }}
-        />
+          <ClearIcon />
+        </IconButton>
       )}
-    </Box>
+    </div>
   );
 };
 
-export default CustomSelectComponent;
+export default CitySelect;

@@ -12,8 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 // mui icons
-import { WbSunny } from '@mui/icons-material';
+import { Delete, Edit, WbSunny } from '@mui/icons-material';
 import useCardColor from '../hooks/useCardColor';
+import CloudIcon from '@mui/icons-material/Cloud';
+import BlurOnIcon from '@mui/icons-material/BlurOn';
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 
@@ -38,6 +40,12 @@ const getWeatherIcon = (description: string) => {
   if (description.includes('clear') || description.includes('sun')) {
     return <WbSunny style={{ fontSize: '24px', color: '#fbc02d' }} />;
   }
+  if (description.includes('clouds') || description.includes('overcast')) {
+    return <CloudIcon style={{ fontSize: '24px', color: '#2196f3' }} />;
+  }
+  if (description.includes('mist')) {
+    return <BlurOnIcon style={{ fontSize: '24px', color: '#2196f3' }} />;
+  }
   return null;
 };
 
@@ -55,20 +63,22 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/city`);
+    navigate(`/details`);
   };
 
   const capitalizeFirstLetter = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
-    <Card style={{ ...cardStyle, marginBottom: '1rem' }}>
+    <Card style={{ ...cardStyle, margin: '1rem 0' }}>
       <CardContent>
         <Typography variant="h6">{capitalizeFirstLetter(name)}</Typography>
         <Typography variant="body2" color="textSecondary">
           {capitalizeFirstLetter(description)}
         </Typography>
-
+        <Typography variant="body2" color="textSecondary">
+          {temp}°C
+        </Typography>
         <div>{getWeatherIcon(description)}</div>
       </CardContent>
       <CardActions>
@@ -78,6 +88,7 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
           variant="contained"
           onClick={handleUpdate}
         >
+          <Edit sx={{ fontSize: 18, margin: '5px' }} />
           Update
         </Button>
         <Button
@@ -86,6 +97,7 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
           variant="contained"
           onClick={handleRemove}
         >
+          <Delete sx={{ fontSize: 15 }} />
           Remove
         </Button>
       </CardActions>
