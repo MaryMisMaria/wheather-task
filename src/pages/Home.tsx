@@ -1,53 +1,67 @@
 import React, { FC, useState } from 'react';
+// redux
+import { fetchWeather } from '../redux/weatherSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { fetchWeather } from '../redux/weatherSlice';
-import CityCard from '../components/CityCard';
+// material
 import {
+  Alert,
+  Box,
   Button,
   CircularProgress,
   Container,
   Grid,
-  TextField,
+  Snackbar,
   Typography,
 } from '@mui/material';
+// components
+import CityCard from '../components/CityCard';
+import CitySelect from '../components/CitySearch';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { cities, loading, error } = useSelector(
-    (state: RootState) => state.weather,
-  );
-  const [cityName, setCityName] = useState<string>('');
+  const { cities, loading } = useSelector((state: RootState) => state.weather);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const handleAddCity = () => {
-    if (cityName.trim()) {
-      dispatch(fetchWeather(cityName));
-      setCityName('');
+    if (selectedCity && selectedCountry) {
+      dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
+      setSelectedCity(null);
+      setSelectedCountry(null);
+      setOpenSnackbar(true);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
     <Container maxWidth="md" style={{ marginTop: '2rem' }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom align="center">
         Weather App
       </Typography>
-      <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        style={{ marginBottom: '1.5rem' }}
+      <Box
+        sx={{
+          minHeight: '100px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
       >
-        <TextField
-          sx={{ margin: '50px 0px' }}
-          fullWidth
-          label="Enter city name"
-          variant="outlined"
-          value={cityName}
-          onChange={(e) => setCityName(e.target.value)}
+        <CitySelect
+          onCitySelect={(city, country) => {
+            setSelectedCity(city);
+            setSelectedCountry(country);
+          }}
         />
         <Button
           fullWidth
-          disabled={loading}
+          disabled={loading || !selectedCity || !selectedCountry}
           variant="contained"
           onClick={handleAddCity}
           style={{
@@ -66,19 +80,28 @@ const HomePage: FC = () => {
             'Add City'
           )}
         </Button>
-      </Grid>
-      {error && (
-        <Typography color="error" style={{ marginBottom: '1rem' }}>
-          {error}
-        </Typography>
-      )}
-      <Grid container spacing={2}>
-        {cities.map((city) => (
+      </Box>
+      <Grid sx={{ mt: 2 }} container spacing={2}>
+        {cities?.map((city) => (
           <Grid item xs={12} sm={6} md={4} key={city.id}>
             <CityCard {...city} />
           </Grid>
         ))}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert
+          severity="success"
+          sx={{ width: '100%' }}
+          onClose={handleCloseSnackbar}
+        >
+          City added successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
