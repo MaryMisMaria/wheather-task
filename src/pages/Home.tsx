@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { fetchWeather } from '../redux/weatherSlice';
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
   Container,
   Grid,
+  Snackbar,
   Typography,
 } from '@mui/material';
 import CityCard from '../components/CityCard';
@@ -21,13 +23,19 @@ const HomePage: FC = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null); // Додано для зберігання країни
 
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Додано стан для Snackbar
+
   const handleAddCity = () => {
     if (selectedCity && selectedCountry) {
-      // Додаємо місто і країну
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
-      setSelectedCity(null); // Очищаємо після додавання
-      setSelectedCountry(null); // Очищаємо країну після додавання
+      setSelectedCity(null);
+      setSelectedCountry(null);
+      setOpenSnackbar(true); // Показуємо Snackbar після додавання міста
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -43,11 +51,10 @@ const HomePage: FC = () => {
           justifyContent: 'space-between',
         }}
       >
-        {/* Оновлення, щоб передавати місто і країну */}
         <CitySelect
           onCitySelect={(city, country) => {
             setSelectedCity(city);
-            setSelectedCountry(country); // Зберігаємо і країну
+            setSelectedCountry(country);
           }}
         />
         <Button
@@ -84,6 +91,20 @@ const HomePage: FC = () => {
           </Grid>
         ))}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000} // Сховається через 3 секунди
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }} // Позиція у лівому верхньому куті
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          City added successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
