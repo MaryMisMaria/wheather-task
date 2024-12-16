@@ -55,17 +55,20 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/details/${id}`);
+    navigate(`/city`);
   };
+
+  const capitalizeFirstLetter = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
     <Card style={{ ...cardStyle, marginBottom: '1rem' }}>
       <CardContent>
-        <Typography variant="h6">{name}</Typography>
-        <Typography variant="body1">{temp}°C</Typography>
+        <Typography variant="h6">{capitalizeFirstLetter(name)}</Typography>
         <Typography variant="body2" color="textSecondary">
-          {description}
+          {capitalizeFirstLetter(description)}
         </Typography>
+
         <div>{getWeatherIcon(description)}</div>
       </CardContent>
       <CardActions>
