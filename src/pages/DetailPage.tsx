@@ -1,71 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Line } from 'react-chartjs-2';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
   Tooltip,
-} from 'chart.js';
-
-// Реєстрація модулів Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { ArrowBack } from '@mui/icons-material';
+import { fetchHourlyWeatherData } from '../redux/hourlyWeatherSlice';
+import { AppDispatch, RootState } from '../redux/store';
+import Button from '@mui/material/Button';
 
 const CityDetailPage = () => {
-  const { name } = useParams();
-  const [hourlyData, setHourlyData] = useState<any[]>([]);
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const { cityName } = useParams();
+
+  // Витягування даних з Redux state
+  const { hourlyData, loading, error } = useSelector(
+    (state: RootState) => state.hourlyWeather,
+  );
 
   useEffect(() => {
-    if (name) {
-      fetchHourlyWeatherData(name);
+    if (cityName) {
+      dispatch(fetchHourlyWeatherData(cityName)); // Завантажуємо дані для міста
     }
-  }, [name]);
+  }, [dispatch, cityName]);
 
-  const fetchHourlyWeatherData = async (cityName: string) => {
-    const apiKey = 'your-api-key'; // Replace with your API key
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`;
-
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setHourlyData(data.list.slice(0, 8)); // First 8 hours data
-      } else {
-        console.error('Failed to fetch hourly weather data');
-      }
-    } catch (error) {
-      console.error('Error fetching hourly weather data:', error);
-    }
+  const handleGoBack = () => {
+    navigate('/'); // Повертає на попередню сторінку
   };
 
-  const chartData = {
-    labels: hourlyData.map((item) => item.dt_txt), // Labels for each hour
-    datasets: [
-      {
-        label: 'Temperature (°C)',
-        data: hourlyData.map((item) => item.main.temp), // Temperature data
-        borderColor: 'rgba(75, 192, 192, 1)', // Line color
-        fill: false, // No fill below the line
-      },
-    ],
-  };
+  const customData =
+    cityName && hourlyData[cityName]
+      ? hourlyData[cityName].map((item: { time: any; temperature: any }) => ({
+          time: item.time,
+          metric: item.temperature,
+        }))
+      : [];
 
   return (
     <div>
-      <h1>{name} Weather Details</h1>
-      <Line data={chartData} />
+      <>Custom Data Chart {cityName}</>
+      <Button onClick={handleGoBack}>
+        <ArrowBack />
+      </Button>
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
+      ) : (
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={customData}
+            margin={{ top: 50, right: 30, bottom: 20, left: 10 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="time" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="metric" stroke="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

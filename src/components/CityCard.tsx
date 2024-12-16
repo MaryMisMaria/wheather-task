@@ -58,7 +58,7 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/details`);
+    navigate(`/city/${name}`);
   };
 
   const capitalizeFirstLetter = (str: string) =>
