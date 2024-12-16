@@ -4,6 +4,8 @@ import Select, { SingleValue } from 'react-select';
 // material ui
 import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
+// endpoints
+import { API_KEY, BASE_URL } from '../utilities/endpoints';
 
 interface CityOption {
   label: string;
@@ -23,9 +25,6 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
 
   const fetchCities = useCallback(async (inputValue: string) => {
     if (!inputValue) return;
-
-    const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-    const BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
 
     setIsLoading(true);
 
@@ -56,7 +55,6 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
     newValue: SingleValue<{ label: string; value: string }>,
   ) => {
     if (newValue) {
-      // Перетворюємо на тип CityOption, додавши country
       const selected = options.find(
         (option) => option.value === newValue.value,
       );
@@ -66,7 +64,7 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
       }
     } else {
       setSelectedCity(null);
-      onCitySelect('', ''); // Очищуємо значення
+      onCitySelect('', '');
     }
   };
 
@@ -80,10 +78,10 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
       <Select
         id="city-select"
         options={options}
-        onInputChange={handleInputChange}
-        onChange={handleChange}
-        placeholder="Search for a city..."
         isLoading={isLoading}
+        onChange={handleChange}
+        onInputChange={handleInputChange}
+        placeholder="Search for a city..."
         value={
           selectedCity
             ? { label: selectedCity.label, value: selectedCity.value }
@@ -95,11 +93,11 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
           onClick={handleClear}
           size="small"
           style={{
+            top: '4px',
             fontSize: 8,
+            right: '80px',
             color: 'black',
             position: 'absolute',
-            top: '4px',
-            right: '80px',
           }}
         >
           <ClearIcon />

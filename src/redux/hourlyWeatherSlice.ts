@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-const BASE_URL = 'https://api.openweathermap.org/data/2.5';
+// endpoints
+import { API_KEY, BASE_URL } from '../utilities/endpoints';
 
 export interface HourlyWeather {
   time: string;

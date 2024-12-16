@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+// reducer
 import weatherReducer from '../redux/weatherSlice';
 import hourlyWeatherSlice from './hourlyWeatherSlice';
 
@@ -8,7 +9,7 @@ export type AppDispatch = typeof store.dispatch;
 const store = configureStore({
   reducer: {
     weather: weatherReducer,
-    hourlyWeather: hourlyWeatherSlice, // Додаємо погодинний slice
+    hourlyWeather: hourlyWeatherSlice,
   },
 });
 

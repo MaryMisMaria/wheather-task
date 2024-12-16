@@ -18,6 +18,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
 import { Typography } from '@mui/material';
 
 const CityDetailPage = () => {
