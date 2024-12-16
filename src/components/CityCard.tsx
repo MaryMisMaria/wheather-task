@@ -5,6 +5,9 @@ import { useAppDispatch } from '../hooks';
 import useCardColor from '../hooks/useCardColor';
 // redux
 import { fetchWeather, removeCity } from '../redux/weatherSlice';
+// helpers
+import * as H from '../helpers';
+// material
 import {
   Button,
   Card,
@@ -61,15 +64,12 @@ const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {
     navigate(`/city/${name}`);
   };
 
-  const capitalizeFirstLetter = (str: string) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   return (
     <Card style={{ ...cardStyle, margin: '1rem 0' }}>
       <CardContent>
-        <Typography variant="h6">{capitalizeFirstLetter(name)}</Typography>
+        <Typography variant="h6">{H.capitalizeFirstLetter(name)}</Typography>
         <Typography variant="body2" color="textSecondary">
-          {capitalizeFirstLetter(description)}
+          {H.capitalizeFirstLetter(description)}
         </Typography>
         <Typography variant="body2" color="textSecondary">
           {temp}°C

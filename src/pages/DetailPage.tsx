@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+// redux
+import { AppDispatch, RootState } from '../redux/store';
+import { fetchHourlyWeatherData } from '../redux/hourlyWeatherSlice';
+// material icon
+import { ArrowBack } from '@mui/icons-material';
+// material
+import Button from '@mui/material/Button';
+// chart
 import {
   CartesianGrid,
   Line,
@@ -10,29 +18,25 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { ArrowBack } from '@mui/icons-material';
-import { fetchHourlyWeatherData } from '../redux/hourlyWeatherSlice';
-import { AppDispatch, RootState } from '../redux/store';
-import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
 const CityDetailPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const { cityName } = useParams();
 
-  // Витягування даних з Redux state
   const { hourlyData, loading, error } = useSelector(
     (state: RootState) => state.hourlyWeather,
   );
 
   useEffect(() => {
     if (cityName) {
-      dispatch(fetchHourlyWeatherData(cityName)); // Завантажуємо дані для міста
+      dispatch(fetchHourlyWeatherData(cityName));
     }
   }, [dispatch, cityName]);
 
   const handleGoBack = () => {
-    navigate('/'); // Повертає на попередню сторінку
+    navigate('/');
   };
 
   const customData =
@@ -49,11 +53,10 @@ const CityDetailPage = () => {
       <Button onClick={handleGoBack}>
         <ArrowBack />
       </Button>
-
       {loading ? (
-        <p>Loading...</p>
+        <Typography>Loading...</Typography>
       ) : error ? (
-        <p>Error: {error}</p>
+        <Typography>Error: {error}</Typography>
       ) : (
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
