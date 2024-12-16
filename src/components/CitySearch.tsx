@@ -78,7 +78,7 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
         id="city-select"
         options={options}
         onInputChange={handleInputChange}
-        onChange={handleChange} // Використовуємо оновлену функцію handleChange
+        onChange={handleChange}
         placeholder="Search for a city..."
         isLoading={isLoading}
         value={
