@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 // hooks
 import { useAppDispatch } from '../hooks';
+import useCardColor from '../hooks/useCardColor';
 // redux
 import { fetchWeather, removeCity } from '../redux/weatherSlice';
 import {
@@ -12,19 +13,13 @@ import {
   Typography,
 } from '@mui/material';
 // mui icons
-import { Delete, Edit, WbSunny } from '@mui/icons-material';
-import useCardColor from '../hooks/useCardColor';
 import CloudIcon from '@mui/icons-material/Cloud';
 import BlurOnIcon from '@mui/icons-material/BlurOn';
+import { Delete, Edit, WbSunny } from '@mui/icons-material';
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
-
-interface CityCardProps {
-  id: string;
-  name: string;
-  temp: number;
-  description: string;
-}
+// types
+import { CityCardProps } from '../types';
 
 const getWeatherIcon = (description: string) => {
   if (description.includes('rain')) {

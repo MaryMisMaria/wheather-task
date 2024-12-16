@@ -1,7 +1,9 @@
 import React, { FC, useState } from 'react';
+// redux
+import { fetchWeather } from '../redux/weatherSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { fetchWeather } from '../redux/weatherSlice';
+// material
 import {
   Alert,
   Box,
@@ -12,25 +14,25 @@ import {
   Snackbar,
   Typography,
 } from '@mui/material';
+// components
 import CityCard from '../components/CityCard';
 import CitySelect from '../components/CitySearch';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { cities, loading, error } = useSelector(
-    (state: RootState) => state.weather,
-  );
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null); // Додано для зберігання країни
+  const { cities, loading } = useSelector((state: RootState) => state.weather);
 
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Додано стан для Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const handleAddCity = () => {
     if (selectedCity && selectedCountry) {
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
       setSelectedCity(null);
       setSelectedCountry(null);
-      setOpenSnackbar(true); // Показуємо Snackbar після додавання міста
+      setOpenSnackbar(true);
     }
   };
 
@@ -79,11 +81,6 @@ const HomePage: FC = () => {
           )}
         </Button>
       </Box>
-      {error && (
-        <Typography color="error" style={{ marginBottom: '1rem' }}>
-          {error}
-        </Typography>
-      )}
       <Grid sx={{ mt: 2 }} container spacing={2}>
         {cities?.map((city) => (
           <Grid item xs={12} sm={6} md={4} key={city.id}>
@@ -93,14 +90,14 @@ const HomePage: FC = () => {
       </Grid>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000} // Сховається через 3 секунди
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }} // Позиція у лівому верхньому куті
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Alert
-          onClose={handleCloseSnackbar}
           severity="success"
           sx={{ width: '100%' }}
+          onClose={handleCloseSnackbar}
         >
           City added successfully!
         </Alert>

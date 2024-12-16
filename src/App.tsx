@@ -1,16 +1,15 @@
 import React, { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
-// components
-import CityDetailsPage from './components/CityDetails';
 // pages
 import HomePage from './pages/Home';
+import DetailsPage from './pages/DetailPage';
 
 const App: FC = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/details" element={<CityDetailsPage />} />
+        <Route path="/details" element={<DetailsPage />} />
       </Routes>
     </>
   );

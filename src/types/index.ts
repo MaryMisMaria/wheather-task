@@ -13,6 +13,13 @@ export interface WeatherState {
   error: string | null;
 }
 
+export interface CityCardProps {
+  id: string;
+  name: string;
+  temp: number;
+  description: string;
+}
+
 const chartData: ChartData<'line'> = {
   labels: ['10:00', '11:00', '12:00', '13:00', '14:00'],
   datasets: [
