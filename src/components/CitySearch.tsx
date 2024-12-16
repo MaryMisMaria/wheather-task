@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import Select, { SingleValue } from 'react-select'; // Імпортуємо SingleValue
-import IconButton from '@mui/material/IconButton';
+//select
+import Select, { SingleValue } from 'react-select';
+// material ui
 import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
 
 interface CityOption {
   label: string;
@@ -14,8 +16,9 @@ interface CitySelectProps {
 }
 
 const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
-  const [options, setOptions] = useState<CityOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [options, setOptions] = useState<CityOption[]>([]);
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
 
   const fetchCities = useCallback(async (inputValue: string) => {
