@@ -2,7 +2,7 @@
   "name": "wheather-task",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://MaryMisMaria.github.io/wheather-task.git",
+  "homepage": ".",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

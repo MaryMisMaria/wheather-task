@@ -17,6 +17,8 @@ import {
 // components
 import CityCard from '../components/CityCard';
 import CitySelect from '../components/CitySearch';
+// helpers
+import * as H from '../helpers';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,8 +27,6 @@ const HomePage: FC = () => {
     (state: RootState) => state.weather,
   );
 
-  // Стан для Snackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
     'success',
@@ -35,11 +35,12 @@ const HomePage: FC = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const [isAddingCity, setIsAddingCity] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [isAddingCity, setIsAddingCity] = useState<boolean>(false);
 
   const handleAddCity = () => {
     if (selectedCity && selectedCountry) {
-      setIsAddingCity(true); // починаємо додавання
+      setIsAddingCity(true);
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
       setSelectedCity(null);
       setSelectedCountry(null);
@@ -60,7 +61,7 @@ const HomePage: FC = () => {
         setSnackbarSeverity('success');
       }
       setSnackbarOpen(true);
-      setIsAddingCity(false); // скидаємо стан додавання
+      setIsAddingCity(false);
     }
   }, [loading, error, isAddingCity]);
 
@@ -83,11 +84,31 @@ const HomePage: FC = () => {
             setSelectedCountry(country);
           }}
         />
+        <Box>
+          {cities?.map((city) => {
+            if (selectedCity && city.name === selectedCity) {
+              return (
+                <div key={city.id}>
+                  <Typography variant="h6">
+                    {H.capitalizeFirstLetter(city.name)}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {H.capitalizeFirstLetter(city.description)}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {city.temp}°C
+                  </Typography>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </Box>
         <Button
           fullWidth
-          disabled={loading || !selectedCity || !selectedCountry}
           variant="contained"
           onClick={handleAddCity}
+          disabled={loading || !selectedCity || !selectedCountry}
           style={{
             color: 'white',
             fontWeight: 'bold',

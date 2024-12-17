@@ -11,14 +11,15 @@ import * as H from '../helpers';
 import {
   Button,
   Card,
+  Typography,
   CardActions,
   CardContent,
-  Typography,
 } from '@mui/material';
 // mui icons
 import CloudIcon from '@mui/icons-material/Cloud';
 import BlurOnIcon from '@mui/icons-material/BlurOn';
 import { Delete, Edit, WbSunny } from '@mui/icons-material';
+import DefaultWeatherIcon from '@mui/icons-material/FilterDrama';
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 // types
@@ -44,7 +45,8 @@ const getWeatherIcon = (description: string) => {
   if (description.includes('mist')) {
     return <BlurOnIcon style={{ fontSize: '24px', color: '#2196f3' }} />;
   }
-  return null;
+
+  return <DefaultWeatherIcon style={{ fontSize: '24px', color: '#9e9e9e' }} />;
 };
 
 const CityCard: FC<CityCardProps> = ({ id, name, temp, description }) => {

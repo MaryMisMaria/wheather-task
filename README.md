@@ -1,3 +1,9 @@
+
+# Важлива інформація
+Для роботи з цим проектом використовуйте **add-feature** гілку. Усі нові функціональності, виправлення помилок та інші 
+зміни 
+повинні бути внесені до цієї гілки. Інші гілки створюються для тестування або експериментів і не повинні використовуватися для основної роботи.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

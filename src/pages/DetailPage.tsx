@@ -1,14 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-// redux
-import { AppDispatch, RootState } from '../redux/store';
-import { fetchHourlyWeatherData } from '../redux/hourlyWeatherSlice';
-// material icon
-import { ArrowBack } from '@mui/icons-material';
-// material
-import Button from '@mui/material/Button';
-// chart
 import {
   CartesianGrid,
   Line,
@@ -18,27 +11,31 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-
-import { Typography } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { fetchHourlyWeatherData } from '../redux/hourlyWeatherSlice';
+import { AppDispatch, RootState } from '../redux/store';
+import Button from '@mui/material/Button';
 
 const CityDetailPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const { cityName } = useParams();
 
+  // Витягування даних з Redux state
   const { hourlyData, loading, error } = useSelector(
     (state: RootState) => state.hourlyWeather,
   );
 
   useEffect(() => {
     if (cityName) {
-      dispatch(fetchHourlyWeatherData(cityName));
+      dispatch(fetchHourlyWeatherData(cityName)); // Завантажуємо дані для міста
     }
   }, [dispatch, cityName]);
 
   const handleGoBack = () => {
-    navigate('/');
+    navigate('/'); // Повертає на попередню сторінку
   };
+
   const customData =
     cityName && hourlyData[cityName]
       ? hourlyData[cityName].map((item: { time: any; temperature: any }) => ({
@@ -53,10 +50,11 @@ const CityDetailPage = () => {
       <Button onClick={handleGoBack}>
         <ArrowBack />
       </Button>
+
       {loading ? (
-        <Typography>Loading...</Typography>
+        <p>Loading...</p>
       ) : error ? (
-        <Typography>Error: {error}</Typography>
+        <p>Error: {error}</p>
       ) : (
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
