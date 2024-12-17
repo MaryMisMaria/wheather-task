@@ -84,26 +84,6 @@ const HomePage: FC = () => {
             setSelectedCountry(country);
           }}
         />
-        <Box>
-          {cities?.map((city) => {
-            if (selectedCity && city.name === selectedCity) {
-              return (
-                <div key={city.id}>
-                  <Typography variant="h6">
-                    {H.capitalizeFirstLetter(city.name)}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {H.capitalizeFirstLetter(city.description)}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {city.temp}°C
-                  </Typography>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </Box>
         <Button
           fullWidth
           variant="contained"
