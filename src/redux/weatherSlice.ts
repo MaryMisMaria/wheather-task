@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // types
 import { CityWeather, WeatherState } from '../types';
 // endpoints
-import { API_KEY, BASE_URL } from '../utilities/endpoints';
+import { API_KEY, BASE_URL_HOURLY } from '../utilities/endpoints';
 
 const loadFromLocalStorage = (): CityWeather[] => {
   const data = localStorage.getItem('cities');
@@ -23,7 +23,7 @@ export const fetchWeather = createAsyncThunk(
   'weather/fetchWeather',
   async (cityName: string) => {
     const response = await fetch(
-      `${BASE_URL}/weather?q=${cityName}&appid=${API_KEY}&units=metric`,
+      `${BASE_URL_HOURLY}/weather?q=${cityName}&appid=${API_KEY}&units=metric`,
     );
     if (!response.ok) {
       throw new Error('Such a city does not exist. Please check information.');

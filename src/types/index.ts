@@ -18,3 +18,20 @@ export interface WeatherState {
   loading: boolean;
   error: string | null;
 }
+
+export interface HourlyWeather {
+  time: string;
+  temperature: number;
+}
+
+export interface HourlyWeatherState {
+  hourlyData: Record<string, HourlyWeather[]>;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface CityOption {
+  label: string;
+  value: string;
+  country: string;
+}

@@ -39,7 +39,6 @@ const CityDetailPage = () => {
   const handleGoBack = () => {
     navigate('/');
   };
-
   const customData =
     cityName && hourlyData[cityName]
       ? hourlyData[cityName].map((item: { time: any; temperature: any }) => ({

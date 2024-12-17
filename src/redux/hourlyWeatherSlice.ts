@@ -1,26 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+// types
+import { HourlyWeatherState } from '../types';
 // endpoints
-import { API_KEY, BASE_URL } from '../utilities/endpoints';
+import { API_KEY, BASE_URL_HOURLY } from '../utilities/endpoints';
 
-export interface HourlyWeather {
-  time: string;
-  temperature: number;
-}
-
-interface HourlyWeatherState {
-  hourlyData: Record<string, HourlyWeather[]>; // Ключ - назва міста
-  loading: boolean;
-  error: string | null;
-}
-
-// Початковий стан
 const initialState: HourlyWeatherState = {
   hourlyData: {},
   loading: false,
   error: null,
 };
 
-// Асинхронна функція для завантаження погодинних даних
 export const fetchHourlyWeatherData = createAsyncThunk(
   'hourlyWeather/fetchHourlyWeatherData',
   async (cityName: string, { rejectWithValue }) => {
@@ -29,7 +18,7 @@ export const fetchHourlyWeatherData = createAsyncThunk(
         throw new Error('City name is required');
       }
 
-      const url = `${BASE_URL}/forecast?q=${cityName}&appid=${API_KEY}&units=metric`;
+      const url = `${BASE_URL_HOURLY}/forecast?q=${cityName}&appid=${API_KEY}&units=metric`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorMessage = await response.text();

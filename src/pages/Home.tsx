@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 // redux
 import { fetchWeather } from '../redux/weatherSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,25 +21,48 @@ import CitySelect from '../components/CitySearch';
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { cities, loading } = useSelector((state: RootState) => state.weather);
+  const { cities, loading, error } = useSelector(
+    (state: RootState) => state.weather,
+  );
 
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  // Стан для Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success',
+  );
 
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
+  const [isAddingCity, setIsAddingCity] = useState(false);
+
   const handleAddCity = () => {
-    if (selectedCity) {
+    if (selectedCity && selectedCountry) {
+      setIsAddingCity(true); // починаємо додавання
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
       setSelectedCity(null);
       setSelectedCountry(null);
-      setOpenSnackbar(true);
     }
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setSnackbarOpen(false);
   };
+
+  useEffect(() => {
+    if (isAddingCity && !loading) {
+      if (error) {
+        setSnackbarMessage('Failed to add city. Please try again.');
+        setSnackbarSeverity('error');
+      } else {
+        setSnackbarMessage('City added successfully!');
+        setSnackbarSeverity('success');
+      }
+      setSnackbarOpen(true);
+      setIsAddingCity(false); // скидаємо стан додавання
+    }
+  }, [loading, error, isAddingCity]);
 
   return (
     <Container maxWidth="md" style={{ marginTop: '2rem' }}>
@@ -90,17 +113,17 @@ const HomePage: FC = () => {
         ))}
       </Grid>
       <Snackbar
-        open={openSnackbar}
+        open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Alert
-          severity="success"
           sx={{ width: '100%' }}
+          severity={snackbarSeverity}
           onClose={handleCloseSnackbar}
         >
-          City added successfully!
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </Container>
