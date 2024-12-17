@@ -1,17 +1,10 @@
 import React, { useCallback, useState } from 'react';
 //select
 import Select, { SingleValue } from 'react-select';
-// material ui
-import ClearIcon from '@mui/icons-material/Clear';
-import IconButton from '@mui/material/IconButton';
+// types
+import { CityOption } from '../types';
 // endpoints
 import { API_KEY, BASE_URL } from '../utilities/endpoints';
-
-interface CityOption {
-  label: string;
-  value: string;
-  country: string;
-}
 
 interface CitySelectProps {
   onCitySelect: (cityName: string, country: string) => void;
@@ -68,14 +61,10 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
     }
   };
 
-  const handleClear = () => {
-    setSelectedCity(null);
-    onCitySelect('', '');
-  };
-
   return (
     <div style={{ position: 'relative' }}>
       <Select
+        isClearable
         id="city-select"
         options={options}
         isLoading={isLoading}
@@ -88,21 +77,6 @@ const CitySelect: React.FC<CitySelectProps> = ({ onCitySelect }) => {
             : null
         }
       />
-      {selectedCity && (
-        <IconButton
-          onClick={handleClear}
-          size="small"
-          style={{
-            top: '4px',
-            fontSize: 8,
-            right: '80px',
-            color: 'black',
-            position: 'absolute',
-          }}
-        >
-          <ClearIcon />
-        </IconButton>
-      )}
     </div>
   );
 };

@@ -29,3 +29,9 @@ export interface HourlyWeatherState {
   loading: boolean;
   error: string | null;
 }
+
+export interface CityOption {
+  label: string;
+  value: string;
+  country: string;
+}
