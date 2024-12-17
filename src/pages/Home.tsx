@@ -25,7 +25,6 @@ const HomePage: FC = () => {
     (state: RootState) => state.weather,
   );
 
-  // Стан для Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
@@ -39,7 +38,7 @@ const HomePage: FC = () => {
 
   const handleAddCity = () => {
     if (selectedCity && selectedCountry) {
-      setIsAddingCity(true); // починаємо додавання
+      setIsAddingCity(true);
       dispatch(fetchWeather(`${selectedCity},${selectedCountry}`));
       setSelectedCity(null);
       setSelectedCountry(null);
@@ -60,7 +59,7 @@ const HomePage: FC = () => {
         setSnackbarSeverity('success');
       }
       setSnackbarOpen(true);
-      setIsAddingCity(false); // скидаємо стан додавання
+      setIsAddingCity(false);
     }
   }, [loading, error, isAddingCity]);
 
