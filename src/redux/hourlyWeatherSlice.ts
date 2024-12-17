@@ -1,19 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+// types
+import { HourlyWeatherState } from '../types';
 // endpoints
 import { API_KEY, BASE_URL } from '../utilities/endpoints';
 
-export interface HourlyWeather {
-  time: string;
-  temperature: number;
-}
-
-interface HourlyWeatherState {
-  hourlyData: Record<string, HourlyWeather[]>; // Ключ - назва міста
-  loading: boolean;
-  error: string | null;
-}
-
-// Початковий стан
 const initialState: HourlyWeatherState = {
   hourlyData: {},
   loading: false,
