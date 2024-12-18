@@ -17,6 +17,8 @@ import {
 // components
 import CityCard from '../components/CityCard';
 import CitySelect from '../components/CitySearch';
+// helpers
+import * as H from '../helpers';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,7 +27,6 @@ const HomePage: FC = () => {
     (state: RootState) => state.weather,
   );
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
     'success',
@@ -34,7 +35,8 @@ const HomePage: FC = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  const [isAddingCity, setIsAddingCity] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [isAddingCity, setIsAddingCity] = useState<boolean>(false);
 
   const handleAddCity = () => {
     if (selectedCity && selectedCountry) {
@@ -84,9 +86,9 @@ const HomePage: FC = () => {
         />
         <Button
           fullWidth
-          disabled={loading || !selectedCity || !selectedCountry}
           variant="contained"
           onClick={handleAddCity}
+          disabled={loading || !selectedCity || !selectedCountry}
           style={{
             color: 'white',
             fontWeight: 'bold',
