@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import Select, { SingleValue } from 'react-select';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,20 +6,28 @@ import { RootState, AppDispatch } from '../redux/store';
 import { fetchCities, clearCities } from '../redux/citySearchSlice';
 // types
 import { CitySelectProps } from '../types';
+// lodash
+import { debounce } from 'lodash';
 
 const CitySelect: FC<CitySelectProps> = ({ onCitySelect }) => {
   const dispatch = useDispatch<AppDispatch>();
-
   const { options, isLoading } = useSelector(
     (state: RootState) => state.cities,
   );
 
+  const debouncedFetchCities = useCallback(
+    debounce((inputValue: string) => {
+      if (inputValue) {
+        dispatch(fetchCities(inputValue));
+      } else {
+        dispatch(clearCities());
+      }
+    }, 500),
+    [dispatch],
+  );
+
   const handleInputChange = (inputValue: string) => {
-    if (inputValue) {
-      dispatch(fetchCities(inputValue));
-    } else {
-      dispatch(clearCities());
-    }
+    debouncedFetchCities(inputValue);
   };
 
   const handleChange = (

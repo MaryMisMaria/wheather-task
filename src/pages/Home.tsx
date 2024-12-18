@@ -77,7 +77,10 @@ const HomePage: FC = () => {
         }}
       >
         <CitySelect
-          onCitySelect={(city, country) => {
+          onCitySelect={(
+            city: React.SetStateAction<string | null>,
+            country: React.SetStateAction<string | null>,
+          ) => {
             setSelectedCity(city);
             setSelectedCountry(country);
           }}
