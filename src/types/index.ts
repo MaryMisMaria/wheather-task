@@ -35,3 +35,18 @@ export interface CityOption {
   value: string;
   country: string;
 }
+
+export interface CityState {
+  options: CityOption[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface CitySelectProps {
+  onCitySelect: (cityName: string, country: string) => void;
+}
+
+export interface CardColor {
+  backgroundColor: string;
+  color: string;
+}

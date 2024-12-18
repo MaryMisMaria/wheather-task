@@ -1,9 +1,6 @@
 import { useMemo } from 'react';
-
-interface CardColor {
-  backgroundColor: string;
-  color: string;
-}
+// types
+import { CardColor } from '../types';
 
 const useCardColor = (description: string): CardColor =>
   useMemo(() => {

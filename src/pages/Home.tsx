@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 // redux
 import { fetchWeather } from '../redux/weatherSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,18 +7,16 @@ import { AppDispatch, RootState } from '../redux/store';
 import {
   Alert,
   Box,
-  Button,
-  CircularProgress,
-  Container,
   Grid,
+  Button,
   Snackbar,
+  Container,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 // components
 import CityCard from '../components/CityCard';
 import CitySelect from '../components/CitySearch';
-// helpers
-import * as H from '../helpers';
 
 const HomePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
